@@ -1,10 +1,11 @@
-using System.Numerics;
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D _rb;
     public float movementSpeed;
+    [SerializeField] Animator _animator;
+    [SerializeField] SpriteRenderer _characterBody;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,9 +24,16 @@ public class NewMonoBehaviourScript : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        UnityEngine.Vector2 movement = new UnityEngine.Vector2(moveHorizontal, moveVertical);
-        movement = UnityEngine.Vector2.ClampMagnitude(movement, 1.0f);
+        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+        movement = Vector2.ClampMagnitude(movement, 1.0f);
+
         _rb.linearVelocity = movement * movementSpeed;
+
+        bool characterIsWalking = movement.magnitude > 0f;
+        _animator.SetBool("isWalking", characterIsWalking);
+
+        bool flipSprite = movement.x < 0f;
+        _characterBody.flipX = flipSprite;
     }
 
 }
